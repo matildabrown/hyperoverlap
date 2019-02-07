@@ -14,4 +14,17 @@
 #' @name hyperoverlap-class
 #' @rdname hyperoverlap-class
 
-NULL
+methods::setClass(Class="Hyperoverlap",
+                  methods::representation(
+                    entity1="character",
+                    entity2="character",
+                    dimensions="character",
+                    occurrences = "matrix",
+                    shape="character",
+                    polynomial.order = "numeric",
+                    result = "character",
+                    accuracy = "table",
+                    number.of.points.misclassified = "numeric",
+                    decisionboundary="list"
+                  )
+)

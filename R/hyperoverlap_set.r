@@ -3,7 +3,7 @@
 #' This function is a wrapper for \code{\link{hyperoverlap_detect}} for pairwise overlap detection between multiple entities.
 #'
 #' @usage hyperoverlap_set(x,y,kernel="polynomial",kernel.degree=3, cost=50,
-#' stoppage.threshold=0.2, write.to.file=TRUE,
+#' stoppage.threshold=0.2, write.to.file=FALSE,
 #' path=paste0("hyperoverlap_",Sys.time(),"/"))
 #'
 #' @param x A matrix or data.frame containing the variables of interest for both entities.
@@ -33,7 +33,7 @@
 #' @export
 
 
-hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=50,stoppage.threshold=0.2, write.to.file=TRUE, path=paste0("hyperoverlap_",Sys.time(),"/")){
+hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=50,stoppage.threshold=0.2, write.to.file=FALSE, path=paste0("hyperoverlap_",Sys.time(),"/")){
 
   #if data are incomplete, break
   if (length(which(is.na(x)==TRUE))>0){

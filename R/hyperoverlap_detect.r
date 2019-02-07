@@ -77,20 +77,6 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
   accuracy <- table(pred,y)
   misclass <-  accuracy[2]+accuracy[3]
 
-  methods::setClass(Class="Hyperoverlap",
-           methods::representation(
-             entity1="character",
-             entity2="character",
-             dimensions="character",
-             occurrences = "matrix",
-             shape="character",
-             polynomial.order = "numeric",
-             result = "character",
-             accuracy = "table",
-             number.of.points.misclassified = "numeric",
-             decisionboundary="list"
-           )
-  )
 
   # if the svm found a hyperplane that perfectly separates the entity data, return "linear non-overlap" and save the coordinates of the decision boundary
   if(misclass==0){
