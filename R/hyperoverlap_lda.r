@@ -41,14 +41,14 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
   ord <- matrix(nrow = n, ncol = n)
   ord[, 1] <- lda1$scaling
   for (i in 2:n){
-    ord[,i] <- stats::runif(4, -1, 1)
+    ord[,i] <- stats::runif(n, -1, 1)
   }
   
   orth <- matlib::GramSchmidt(ord, normalize = TRUE)
   
   while (length(which(orth==0))>0){
     for (i in 2:n){
-      ord[,i] <- stats::runif(4, -1, 1)
+      ord[,i] <- stats::runif(n, -1, 1)
     }
     orth <- matlib::GramSchmidt(ord, normalize = TRUE)
   }
