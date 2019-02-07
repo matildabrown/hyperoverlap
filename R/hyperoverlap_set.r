@@ -52,7 +52,7 @@ hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=50,sto
   }
 
 
-  if (nrow(y)!=nrow(x)){
+  if (length(y)!=nrow(x)){
     stop("Number of labels does not match number of points. ")
   }
 
