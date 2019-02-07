@@ -26,7 +26,7 @@ hyperoverlap_plot = function(x){
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity1))) stop("No decision boundary found.")
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity2))) stop("No decision boundary found.")
 
-  misc3d::contour3d(x@decisionboundary[[1]],level = 0, add=TRUE, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]], z=x@decisionboundary[[2]][[3]])
+  misc3d::contour3d(x@decisionboundary[[1]],level = 0, add=TRUE, alpha=0.7, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]], z=x@decisionboundary[[2]][[3]])
 
 
 }
