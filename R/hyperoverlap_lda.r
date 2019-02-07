@@ -28,65 +28,75 @@
 #' @export
 
 
-hyperoverlap_lda <- function(x, return.plot=TRUE, visualise3d = FALSE){
-
-  occ <- x@occurrences
-  n <- ncol(occ)-1
-  colnames(occ)[1]="Entity"
-  lda1 <- MASS::lda(formula=Entity~., data=occ) #run lda
-  ord <- matrix(nrow=n, ncol=n) #set up matrix for scaling
-  ord[,1] <- lda1$scaling  #axis 1 = lda axis
-  ord[,2:n] <- stats::runif(4,-1,1) #random vars to be orthogonalised
-  orth <- matlib::GramSchmidt(ord, normalize = TRUE) #orthogonalise the second, third axes
-
-
-  tran <-  occ #transform the data; set up matrix
-  cols <- c(colnames(occ)[1], "LDA1")
+hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE) 
+{
+  occ <- data.frame(x@occurrences)
+  n <- ncol(occ) - 1
+  colnames(occ)[1] = "Entity"
+  occ$Entity=factor(occ$Entity)
+  for (i in 2:ncol(occ)){
+    occ[,i] <- as.numeric(occ[,i])
+  }
+  lda1 <- MASS::lda(formula = Entity ~ ., data = occ)
+  ord <- matrix(nrow = n, ncol = n)
+  ord[, 1] <- lda1$scaling
   for (i in 2:n){
-    cols <- c(cols,paste0("O",i-1))
+    ord[,i] <- stats::runif(4, -1, 1)
   }
-  colnames(tran) <- cols
-  for (i in 2:(n+1)){
-    m <- matrix(nrow=nrow(occ),ncol = n)
-    for (j in 1:n){
-      m[,j] <- (occ[,i]*orth[j,(i-1)])
+  
+  orth <- matlib::GramSchmidt(ord, normalize = TRUE)
+  
+  while (length(which(orth==0))>0){
+    for (i in 2:n){
+      ord[,i] <- stats::runif(4, -1, 1)
     }
-    tran[,(i+1)]<- rowSums(m)
+    orth <- matlib::GramSchmidt(ord, normalize = TRUE)
   }
-
-  if (visualise3d==FALSE){
-    pca <- stats::princomp(tran[,3:(n+1)])
+    
+  tran <- occ
+  cols <- c(colnames(occ)[1], "LDA1")
+  for (i in 2:n) {
+    cols <- c(cols, paste0("O", i - 1))
+  }
+  tran[,2:ncol(tran)] <- NA
+  colnames(tran) <- cols
+  for (i in 2:(n + 1)) {
+    m <- matrix(nrow = nrow(occ), ncol = n)
+    for (j in 1:n) {
+      m[, j] <- (occ[, i] * orth[j, (i - 1)])
+    }
+    tran[, (i)] <- rowSums(m)
+  }
+  if (visualise3d == FALSE) {
+    pca <- stats::princomp(tran[, 3:(n + 1)])
     tran2 <- tran[1:3]
     colnames(tran2)[3] <- "residualPCA"
-    m <- matrix(nrow=nrow(occ),ncol=(n-1))
-    for (j in 1:(n-1)){
-      m[,j] <-  (occ[,(j+2)]*pca$loadings[j,1])
+    m <- matrix(nrow = nrow(occ), ncol = (n - 1))
+    for (j in 1:(n - 1)) {
+      m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 1])
     }
-    tran2[,3] <- rowSums(m)
-
+    tran2[, 3] <- rowSums(m)
     if (return.plot == TRUE) {
-      graphics:: plot(tran2[,2:3],col=c("red","blue")[as.factor(tran2$Genus)])
-  } else {
-
-    pca <- stats::princomp(tran[,3:(n+1)])
-    tran2 <- tran[1:4]
-    colnames(tran2)[3:4] <- c("residualPCA1", "residualPCA2")
-    m <- matrix(nrow=nrow(occ),ncol = (n-1))
-    for (j in 1:(n-1)){
-      m[,j] <- (occ[,(j+2)]*pca$loadings[j,1])
+      graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)])
     }
-    tran2[,3] <- rowSums(m)
-
-    for (j in 1:(n-1)){
-      m[,j] <-  (occ[,(j+2)]*pca$loadings[j,2])
+    else {
+      pca <- stats::princomp(tran[, 3:(n + 1)])
+      tran2 <- tran[1:4]
+      colnames(tran2)[3:4] <- c("residualPCA1", "residualPCA2")
+      m <- matrix(nrow = nrow(occ), ncol = (n - 1))
+      for (j in 1:(n - 1)) {
+        m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 
+                                                 1])
+      }
+      tran2[, 3] <- rowSums(m)
+      for (j in 1:(n - 1)) {
+        m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 
+                                                 2])
+      }
+      tran2[, 4] <- rowSums(m)
+      if (return.plot == TRUE) 
+        rgl::plot3d(tran2[, 2:4], col = c("red", "blue")[as.factor(tran2$Entity)])
     }
-    tran2[,4] <- rowSums(m)
-
-    if (return.plot == TRUE) rgl::plot3d(tran2[,2:4],col=c("red","blue")[as.factor(tran2$Genus)])
-
   }
-  }
-
-  return (tran2)
-
+  return(tran2)
 }
