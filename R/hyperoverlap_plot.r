@@ -22,7 +22,7 @@ hyperoverlap_plot = function(x){
     stop("Plotting of decision boundary not supported in >3 dimensions. Use hyperoverlap_lda()")
   }
   dat = x@occurrences
-  rgl::plot3d(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], alpha=0.3, size = 10, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
+  rgl::plot3d(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], alpha=0.3, size = 7, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity1))) stop("No decision boundary found.")
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity2))) stop("No decision boundary found.")
 

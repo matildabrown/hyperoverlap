@@ -14,6 +14,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(knitr)
+library(rgl)
+knit_hooks$set(webgl = hook_webgl)
 ```
 
 Hyperoverlap can be used to detect and visualise overlap in n-dimensional space. 
@@ -24,48 +27,51 @@ To explore the functions in hyperoverlap, we'll use the `iris` dataset. This dat
 1. `test2` two entities (as above); four dimensions
 1. `test3` all entities, all dimensions
 
-```r
-test1 = iris[which(iris$Species!="versicolor"),c(1:3,5)]
-test2 = iris[which(iris$Species!="versicolor"),]
-test3 = iris
+```{r, results='show'}
+test1 <- iris[which(iris$Species!="versicolor"),c(1:3,5)]
+test2 <- iris[which(iris$Species!="versicolor"),]
+test3 <- iris
 ```
 Note that entities may be species, genera, populations etc.
 
 ## Examining overlap between two entities in 3D
 To plot the decision boundary using `hyperoverlap_plot`, the data cannot exceed three dimensions. For high-dimensional visualisation, see `hyperoverlap_lda`.
 
-```r
+```{r, results='show'}
 library(hyperoverlap)
-setosa_virginica3d = hyperoverlap_detect(test1[,1:3], test1$Species)
+setosa_virginica3d <- hyperoverlap_detect(test1[,1:3], test1$Species)
 ```
 To examine the result:
-```r
+```{r, results='show', fig.height=5,fig.width=7, webgl=TRUE, fig.align="center"}
 setosa_virginica3d@result             #gives us the result: overlap or non-overlap?
+
 setosa_virginica3d@shape              #was the decision boundary linear or curvilinear? 
 
 hyperoverlap_plot(setosa_virginica3d) #plot the data and the decision boundary in 3d
 ```
 
 ## Examining overlap between two entities in n-dimensions
-To visualise overlap in n-dimensions, we need to use ordination techniques. The function `hyperoverlap_lda` uses a combination of linear discriminant analysis (LDA) and principal components analysis (PCA) to choose the best two (or three) axes for visualisation.
+To visualise overlap in n-dimensions, we need to use ordination techniques. The function `hyperoverlap_lda` uses a combination of linear discriminant analysis (LDA) and principal components analysis (PCA) to choose the best two (or three) axes for visualisation. To plot these using other methods (e.g. `ggplot2`), the point coordinates are returned as output, here named `transformed_data`.
 
-```r
-setosa_virginica4d = hyperoverlap_detect(test2[,1:4], test2$Species)
+```{r, results='show'}
+setosa_virginica4d <- hyperoverlap_detect(test2[,1:4], test2$Species)
 ```
 To examine the result:
-```r
+```{r, results='show',  fig.height=4,fig.width=4, fig.align="center"}
 setosa_virginica4d@result             #gives us the result: overlap or non-overlap?
 setosa_virginica4d@shape              #was the decision boundary linear or curvilinear? 
+transformed_data <- hyperoverlap_lda(setosa_virginica4d)  #plots the best two dimensions for visualising overlap
+```
 
-hyperoverlap_lda(setosa_virginica4d)  #plots the best two dimensions for visualising overlap
-hyperoverlap_lda(setosa_virginica4d, visualise3d=TRUE)  #plots the best three dimensions for visualising overlap
+```{r, results='show',  fig.height=5,fig.width=7, webgl = hook_webgl,fig.align="center"}
+transformed_data <- hyperoverlap_lda(setosa_virginica4d, visualise3d=TRUE)  #plots the best three dimensions for visualising overlap
 ```
 ## Examining patterns of overlap in groups of entities
 We might want to know which species overlap in certain variables from an entire genus. To do this, we can use `hyperoverlap_set` and visualise the results using `hyperoverlap_pairs_plot`
 
-```r
-all_spp = hyperoverlap_set(test3[,1:4],test3$Species)
-all_spp_plot = hyperoverlap_pairs_plot(all_spp)
+```{r, results='show', fig.dim=c(5,3),fig.align="center"}
+all_spp <- hyperoverlap_set(test3[,1:4],test3$Species)
+all_spp_plot <- hyperoverlap_pairs_plot(all_spp)
 all_spp_plot
 ```
 
