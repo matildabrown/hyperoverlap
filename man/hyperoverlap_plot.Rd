@@ -2,24 +2,21 @@
 % Please edit documentation in R/hyperoverlap_plot.r
 \name{hyperoverlap_plot}
 \alias{hyperoverlap_plot}
-\title{Overlap plotting}
+\title{Overlap plotting for low-dimensional spaces}
 \usage{
 hyperoverlap_plot(x)
 }
 \arguments{
-\item{x}{an \code{\link{hyperoverlap-class}} object}
-}
-\value{
-plot of data and decision boundary
+\item{x}{An \code{\link{hyperoverlap-class}} object.}
 }
 \description{
-Plot the optimal separating hyperplane found by hyperoverlap_detect(). Only used for data of three dimensions or fewer.
+Plot the optimal separating hyperplane found by hyperoverlap_detect() in 3D .
 }
 \examples{
 \dontrun{
-hyperoverlap_plot(hyperoverlap_iris)
+hyperoverlap_plot(x)
 }
 }
 \seealso{
-\code{\link{hyperoverlap_detect}}
+\code{\link{hyperoverlap_detect}} , \code{\link{hyperoverlap_lda}}
 }

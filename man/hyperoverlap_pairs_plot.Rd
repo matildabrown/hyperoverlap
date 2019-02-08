@@ -2,20 +2,23 @@
 % Please edit documentation in R/hyperoverlap_pairs_plot.r
 \name{hyperoverlap_pairs_plot}
 \alias{hyperoverlap_pairs_plot}
-\title{Overlap heatmap plots for comparison of multiple entities}
+\title{Overlap heatmap plotting for analysis of multiple entities}
 \usage{
 hyperoverlap_pairs_plot(x, cols = pal)
 }
 \arguments{
-\item{x}{A matrix of the form produced by produced by \code{hyperoverlap_set()} which contains the columns entity1, entity2, and result}
+\item{x}{A matrix of the form produced by produced by \code{hyperoverlap_set()} (see Details).}
 
-\item{cols}{A vector of colours (defaults to red (a)non-overlap) and blue (overlap))}
+\item{cols}{A vector of colours (default: \code{c("red","blue")}).}
 }
 \value{
 A \code{ggplot} object
 }
 \description{
 This function plots a matrix of overlap.
+}
+\details{
+Input matrix must contain columns named "entity1", "entity2" and "result"
 }
 \examples{
 \dontrun{

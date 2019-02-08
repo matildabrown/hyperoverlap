@@ -8,3 +8,8 @@ Imports: e1071, matlib, ggplot2, rgl, misc3d, methods, stats, MASS
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1

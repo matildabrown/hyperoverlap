@@ -3,15 +3,15 @@
 #' This function plots a matrix of overlap.
 #'
 #' @param x A matrix of the form produced by produced by \code{hyperoverlap_set()} (see Details).
-#' @param cols A vector of colours (default: \code{c("red","blue)}).
+#' @param cols A vector of colours (default: \code{c("red","blue")}).
 #' @details Input matrix must contain columns named "entity1", "entity2" and "result"
 #'
 #' @return A \code{ggplot} object
 #'
-#'@examples
-#'\dontrun{
+#' @examples
+#' \dontrun{
 #' hyperoverlap_pairs_plot(hyperoverlap.set.iris)
-#'}
+#' }
 #' @export
 
 hyperoverlap_pairs_plot <-  function(x, cols = pal){

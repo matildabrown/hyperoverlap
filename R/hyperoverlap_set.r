@@ -2,9 +2,9 @@
 #'
 #' This function is a wrapper for \code{\link{hyperoverlap_detect}} for pairwise overlap detection between multiple entities.
 #'
-#' @usage hyperoverlap_set(x,y,kernel="polynomial",kernel.degree=3, cost=50,
-#' stoppage.threshold=0.2, write.to.file=FALSE,
-#' path=paste0("hyperoverlap_",Sys.time(),"/"))
+#' @usage hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 50,
+#' stoppage.threshold = 0.2, write.to.file = FALSE,
+#' path = paste0("hyperoverlap_", Sys.time(), "/"))
 #'
 #' @param x A matrix or data.frame containing the variables of interest for both entities.
 #' @param y A vector of labels.

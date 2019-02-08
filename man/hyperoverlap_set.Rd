@@ -4,32 +4,40 @@
 \alias{hyperoverlap_set}
 \title{Pairwise overlap detection in n-dimensional space of multiple entities using support vector machines (SVMs)}
 \usage{
-hyperoverlap_set(x,y,kernel="polynomial",kernel.degree=3, cost=50,
-stoppage.threshold=0.2, write.to.file=TRUE,
-path=paste0("hyperoverlap_",Sys.time(),"/"))
+hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 50,
+stoppage.threshold = 0.2, write.to.file = FALSE,
+path = paste0("hyperoverlap_", Sys.time(), "/"))
 }
 \arguments{
-\item{x}{A matrix or data.frame containing the ecological data}
+\item{x}{A matrix or data.frame containing the variables of interest for both entities.}
 
-\item{y}{A vector of labels for each observation}
+\item{y}{A vector of labels.}
 
-\item{kernel}{A length-one character vector, either "linear" or "polynomial"}
+\item{kernel}{Character. Either "linear" or "polynomial" (default = "polynomial").}
 
-\item{kernel.degree}{For kernel="polynomial", specifies the order of polynomial kernel function. Smaller orders allow less complex boundary shapes. Values greater than 5 are not recommended for this parameter.}
+\item{kernel.degree}{Parameter needed for \code{kernel = polynomial} (default = 3).}
 
-\item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy, although this increases runtimes and memory usage.}
+\item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).}
 
-\item{stoppage.threshold}{Default = 0.2. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Can be made 1 to force non-linear separation.}
+\item{stoppage.threshold}{Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).}
 
-\item{write.to.file}{TRUE or FALSE, specifies whether each Hyperoverlap object should be saved as a .rds file}
+\item{write.to.file}{Logical. If TRUE, each \code{\link{hyperoverlap-class}} object is saved as a .rds file.}
 
-\item{path}{where to write .rfds files to. Defaults to a folder in the working directory titled by Sys.time()}
+\item{path}{Character. Path to write .rds files to (default: create subdirectory with \code{Sys.time()}).}
 }
 \value{
-A long-form matrix with the following columns: entity1, entity2, shape,polynomial.order (if kernel=polynomial), result, number.of.points.misclassified. If specified, individual \code{Hyperoverlap-class} objects are written to file
+A long-form matrix with the following columns:
+entity1,
+entity2,
+shape,
+polynomial.order (if \code{kernel="polynomial"}),
+result,
+number.of.points.misclassified.
+
+If specified, individual \code{Hyperoverlap-class} objects are written to file.
 }
 \description{
-This function is a wrapper for \code{\link{hyperoverlap_detect}}
+This function is a wrapper for \code{\link{hyperoverlap_detect}} for pairwise overlap detection between multiple entities.
 }
 \examples{
 \dontrun{

@@ -4,19 +4,19 @@
 \alias{hyperoverlap_detect}
 \title{Overlap detection in n-dimensional space using support vector machines (SVMs)}
 \usage{
-hyperoverlap_detect(x, y, kernel="polynomial",kernel.degree = 3, cost =50,
+hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 50,
        stoppage.threshold = 0.2)
 }
 \arguments{
-\item{x}{A matrix or data.frame containing the data for both entities}
+\item{x}{A matrix or data.frame containing the variables of interest for both entities.}
 
-\item{y}{A vector of labels for each observation}
+\item{y}{A vector of labels.}
 
-\item{kernel}{A length-one character vector, either "linear" or "polynomial"}
+\item{kernel}{Character. Either "linear" or "polynomial" (default = "polynomial").}
 
-\item{kernel.degree}{Parameter needed for kernel of type \code{polynomial} (default=3).}
+\item{kernel.degree}{Parameter needed for \code{kernel = polynomial} (default = 3).}
 
-\item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy, although this increases runtimes and memory usage.}
+\item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).}
 
 \item{stoppage.threshold}{Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).}
 }
@@ -24,7 +24,7 @@ hyperoverlap_detect(x, y, kernel="polynomial",kernel.degree = 3, cost =50,
 A \code{\link{hyperoverlap-class}} object
 }
 \description{
-Given a matrix containing the data and labels for two entities, a support vector machine is trained on these data and the predicted label of each point is evaluated. If every point has been classified correctly, the entities can be separated and they do not overlap.
+Given a matrix containing the ecological data (x) and labels (y) for two entities, a support vector machine is trained and the predicted label of each point is evaluated. If every point has been classified correctly, the entities can be separated and they do not overlap.
 }
 \details{
 Input data should be preprocessed so that all variables are comparable (e.g. same order of magnitude). Polynomial kernels allow curvilinear decision boundaries to be found between entities (see \url{https://www.cs.cmu.edu/~ggordon/SVMs/new-svms-and-kernels.pdf}). Smaller values of \code{kernel.degree} permit less complex decision boundaries; biological significance is likely to be lost at values > 5.

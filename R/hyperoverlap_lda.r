@@ -28,9 +28,10 @@
 #' @export
 
 
-hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE) 
+hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
 {
-  occ <- data.frame(x@occurrences)
+  occ <- x@occurrences
+  if (is.data.frame(occ)==FALSE) occ <- as.data.frame(occ)
   n <- ncol(occ) - 1
   colnames(occ)[1] = "Entity"
   occ$Entity=factor(occ$Entity)
@@ -43,16 +44,16 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
   for (i in 2:n){
     ord[,i] <- stats::runif(n, -1, 1)
   }
-  
+
   orth <- matlib::GramSchmidt(ord, normalize = TRUE)
-  
+
   while (length(which(orth==0))>0){
     for (i in 2:n){
       ord[,i] <- stats::runif(n, -1, 1)
     }
     orth <- matlib::GramSchmidt(ord, normalize = TRUE)
   }
-    
+
   tran <- occ
   cols <- c(colnames(occ)[1], "LDA1")
   for (i in 2:n) {
@@ -85,16 +86,16 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
       colnames(tran2)[3:4] <- c("residualPCA1", "residualPCA2")
       m <- matrix(nrow = nrow(occ), ncol = (n - 1))
       for (j in 1:(n - 1)) {
-        m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 
+        m[, j] <- (occ[, (j + 2)] * pca$loadings[j,
                                                  1])
       }
       tran2[, 3] <- rowSums(m)
       for (j in 1:(n - 1)) {
-        m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 
+        m[, j] <- (occ[, (j + 2)] * pca$loadings[j,
                                                  2])
       }
       tran2[, 4] <- rowSums(m)
-      if (return.plot == TRUE) 
+      if (return.plot == TRUE)
         rgl::plot3d(tran2[, 2:4], col = c("red", "blue")[as.factor(tran2$Entity)])
     }
   }

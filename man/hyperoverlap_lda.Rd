@@ -2,22 +2,23 @@
 % Please edit documentation in R/hyperoverlap_lda.r
 \name{hyperoverlap_lda}
 \alias{hyperoverlap_lda}
-\title{Hyperoverlap visualisation using linear discriminant analysis}
+\title{Hyperoverlap visualisation using linear discriminant analysis (LDA)}
 \usage{
 hyperoverlap_lda(x, return.plot=TRUE, visualise3d=FALSE)
 }
 \arguments{
-\item{x}{An object of class "Hyperoverlap"}
+\item{x}{An \code{\link{hyperoverlap-class}} object.}
 
-\item{return.plot}{Logical. If TRUE, data are plotted using plot()}
+\item{return.plot}{Logical. If TRUE, data are plotted using \code{plot()}.}
 
 \item{visualise3d}{Logical. If FALSE, data are projected onto two axes (LDA1, residualPCA1). If TRUE, data are projected onto three axes (LDA1, residualPCA1, residualPCA2)}
 }
 \value{
-Returns a dataframe with columns "Entity", "LDA1", "residualPCA1", "residualPCA2" (if \code{visualise3d = TRUE})
+Returns a dataframe with columns "Entity", "LDA1", "residualPCA1",
+"residualPCA2" (if \code{visualise3d = TRUE})
 }
 \description{
-Hyperoverlap visualisation using linear discriminant analysis
+Hyperoverlap visualisation using linear discriminant analysis (LDA)
 }
 \details{
 This function provides a way to visualise overlap (or non-overlap)
@@ -35,5 +36,5 @@ hyperoverlap_lda(x)
 }
 }
 \seealso{
-hyperoverlap_detect
+\code{\link{hyperoverlap_detect}}
 }
