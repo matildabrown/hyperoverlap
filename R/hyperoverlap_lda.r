@@ -80,7 +80,7 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
     if (return.plot == TRUE) {
       graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)])
     }
-    else {
+    if (visualise3d == TRUE) {
       pca <- stats::princomp(tran[, 3:(n + 1)])
       tran2 <- tran[1:4]
       colnames(tran2)[3:4] <- c("residualPCA1", "residualPCA2")
