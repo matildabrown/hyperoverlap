@@ -78,7 +78,7 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
     }
     tran2[, 3] <- rowSums(m)
     if (return.plot == TRUE) {
-      graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)])
+      graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
     }
   }
     if (visualise3d == TRUE) {
