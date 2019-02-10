@@ -21,12 +21,21 @@ hyperoverlap_plot = function(x){
   if (length(x@dimensions)>=4){
     stop("Plotting of decision boundary not supported in >3 dimensions. Use hyperoverlap_lda()")
   }
+
+
   dat = x@occurrences
-  rgl::plot3d(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], alpha=0.3, size = 7, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity1))) stop("No decision boundary found.")
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity2))) stop("No decision boundary found.")
 
+  if (length(x@dimensions)==2){
+    plot(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
+    contour(x@decisionboundary[[1]],level = 0, add=TRUE, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]])
+  }
+
+  if (length(x@dimensions)==3){
+  rgl::plot3d(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], alpha=0.3, size = 7, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
   misc3d::contour3d(x@decisionboundary[[1]],level = 0, add=TRUE, alpha=0.7, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]], z=x@decisionboundary[[2]][[3]])
+  }
 
 
 }
