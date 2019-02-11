@@ -28,8 +28,8 @@ hyperoverlap_plot = function(x){
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity2))) stop("No decision boundary found.")
 
   if (length(x@dimensions)==2){
-    plot(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
-    contour(x@decisionboundary[[1]],level = 0, add=TRUE, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]])
+    graphics::plot(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
+    graphics::contour(x@decisionboundary[[1]],level = 0, add=TRUE, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]])
   }
 
   if (length(x@dimensions)==3){

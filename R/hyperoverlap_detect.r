@@ -130,6 +130,7 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
       pred2 <-  stats::predict(fit2,x)
       accuracy2 <- table(pred2,y)
       misclass2 <-  accuracy2[2]+accuracy2[3]
+      deg=2
 
       if (misclass2<misclass){
         fit <- fit2

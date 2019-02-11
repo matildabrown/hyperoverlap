@@ -4,8 +4,8 @@
 \alias{hyperoverlap_detect}
 \title{Overlap detection in n-dimensional space using support vector machines (SVMs)}
 \usage{
-hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 50,
-       stoppage.threshold = 0.2)
+hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
+       stoppage.threshold = 0.4)
 }
 \arguments{
 \item{x}{A matrix or data.frame containing the variables of interest for both entities.}
