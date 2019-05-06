@@ -9,10 +9,13 @@
 #' @slot result a length-one character vector, either "overlap" or "non-overlap"
 #' @slot accuracy a 2x2 table with the true (y) and predicted (pred) labels
 #' @slot number.of.points.misclassified a length-one numeric vector
-#' @slot decision.boundary list of 2; used for plotting decision boundary
+#' @slot model svm model used to plot decision boundary
 #'
 #' @name hyperoverlap-class
 #' @rdname hyperoverlap-class
+
+
+setOldClass("svm.formula")
 
 methods::setClass(Class="Hyperoverlap",
                   methods::representation(
@@ -25,6 +28,6 @@ methods::setClass(Class="Hyperoverlap",
                     result = "character",
                     accuracy = "table",
                     number.of.points.misclassified = "numeric",
-                    decisionboundary="list"
+                    model = "svm.formula"
                   )
 )

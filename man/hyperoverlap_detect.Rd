@@ -5,7 +5,7 @@
 \title{Overlap detection in n-dimensional space using support vector machines (SVMs)}
 \usage{
 hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
-       stoppage.threshold = 0.4)
+       stoppage.threshold = 0.4, set = FALSE)
 }
 \arguments{
 \item{x}{A matrix or data.frame containing the variables of interest for both entities.}
@@ -19,6 +19,8 @@ hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
 \item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).}
 
 \item{stoppage.threshold}{Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).}
+
+\item{set}{Logical. Is this function being called as part of \code{hyperoverlap_set()}? Should not need to be changed.}
 }
 \value{
 A \code{\link{hyperoverlap-class}} object

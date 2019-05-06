@@ -23,18 +23,27 @@ hyperoverlap_plot = function(x){
   }
 
 
+  grid.length = 50
+  newdat.list <-  lapply(x@occurrences[,-1], function(z) seq(min(z), max(z), len=grid.length))
+  newdat      <-  expand.grid(newdat.list)
+
+  #find the decision boundary coordinates
+  newdat.pred <-  stats::predict(x@model, newdata=newdat, decision.values=T)
+  newdat.dv   <-  attr(newdat.pred, 'decision.values')
+  newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
+
   dat = x@occurrences
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity1))) stop("No decision boundary found.")
   if (x@number.of.points.misclassified == length(which(dat[,1]==x@entity2))) stop("No decision boundary found.")
 
   if (length(x@dimensions)==2){
     graphics::plot(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
-    graphics::contour(x@decisionboundary[[1]],level = 0, add=TRUE, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]])
+    graphics::contour(newdat.dv,level = 0, add=TRUE, x =newdat.list[[1]], y=newdat.list[[2]])
   }
 
   if (length(x@dimensions)==3){
   rgl::plot3d(dat[,-1], col=c("red","blue")[as.factor(dat[,1])], alpha=0.3, size = 7, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
-  misc3d::contour3d(x@decisionboundary[[1]],level = 0, add=TRUE, alpha=0.7, x =x@decisionboundary[[2]][[1]], y=x@decisionboundary[[2]][[2]], z=x@decisionboundary[[2]][[3]])
+  misc3d::contour3d(newdat.dv,level = 0, add=TRUE, alpha=0.7, x =newdat.list[[1]], y=newdat.list[[2]], z=newdat.list[[3]])
   }
 
 

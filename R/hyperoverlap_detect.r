@@ -3,7 +3,7 @@
 #' Given a matrix containing the ecological data (x) and labels (y) for two entities, a support vector machine is trained and the predicted label of each point is evaluated. If every point has been classified correctly, the entities can be separated and they do not overlap.
 #'
 #' @usage hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
-#'        stoppage.threshold = 0.4)
+#'        stoppage.threshold = 0.4, set = FALSE)
 #'
 #' @param x A matrix or data.frame containing the variables of interest for both entities.
 #' @param y A vector of labels.
@@ -11,6 +11,7 @@
 #' @param kernel.degree Parameter needed for \code{kernel = polynomial} (default = 3).
 #' @param cost Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).
 #' @param stoppage.threshold Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).
+#' @param set Logical. Is this function being called as part of \code{hyperoverlap_set()}? Should not need to be changed.
 #'
 #' @return A \code{\link{hyperoverlap-class}} object
 #' @export
@@ -21,7 +22,7 @@
 #' }
 #' @details Input data should be preprocessed so that all variables are comparable (e.g. same order of magnitude). Polynomial kernels allow curvilinear decision boundaries to be found between entities (see \url{https://www.cs.cmu.edu/~ggordon/SVMs/new-svms-and-kernels.pdf}). Smaller values of \code{kernel.degree} permit less complex decision boundaries; biological significance is likely to be lost at values > 5.
 
-hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=500,stoppage.threshold=0.4){
+hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=500,stoppage.threshold=0.4, set = FALSE) {
 
   #if data are incomplete, break
   if (length(which(is.na(x)==TRUE))>0){
@@ -48,9 +49,11 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
     stop("More than two entities detected. For multiple pairs, see hyperoverlap_set(). ")
   }
 
+   if (set == FALSE){
   if (nrow(x)<=(ncol(x)+1)){
     stop("Total number of points too small and will always produce a boundary. Decrease dimensionality or exclude this pair from analysis ")
   }
+   }
 
   if (stoppage.threshold<0){
     stop("Invalid stoppage threshold. Value must be between 0 and 1.")
@@ -63,13 +66,12 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
   n <- ncol(x)
   m <-  nrow(x)
   y <- factor(y)
+
   entity1 <-  as.character(levels(factor(y))[1])
   entity2 <-  as.character(levels(factor(y))[2])
   dimensions <-  colnames(x)
   occurrences <-  cbind(y,x)
 
-  newdat.list <-  lapply(x, function(x) seq(min(x), max(x), len=50))
-  newdat      <-  expand.grid(newdat.list)
 
   #fit the SVM, evaluate how well it separated the data
   fit <-  e1071::svm(formula = y~.,data=occurrences, scale=FALSE, kernel ="linear", cost=cost)
@@ -81,11 +83,6 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
   # if the svm found a hyperplane that perfectly separates the entity data, return "linear non-overlap" and save the coordinates of the decision boundary
   if(misclass==0){
 
-    #find the decision boundary coordinates
-    newdat.pred <-  stats::predict(fit, newdata=newdat, decision.values=T)
-    newdat.dv   <-  attr(newdat.pred, 'decision.values')
-    newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
-
     return(methods::new("Hyperoverlap",
                entity1=entity1,
                entity2=entity2,
@@ -96,16 +93,12 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                result = "non-overlap",
                accuracy = accuracy,
                number.of.points.misclassified = 0,
-               decisionboundary=list(newdat.dv,newdat.list)
+               model = fit
     ))
 
   } else {
     if(kernel=="linear"){
-      #find the decision boundary coordinates
 
-      newdat.pred <-  stats::predict(fit, newdata=newdat, decision.values=T)
-      newdat.dv   <-  attr(newdat.pred, 'decision.values')
-      newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
 
       return(methods::new("Hyperoverlap",
                  entity1=entity1,
@@ -117,13 +110,27 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                  result = "overlap",
                  accuracy = accuracy,
                  number.of.points.misclassified = misclass,
-                 decisionboundary=list(newdat.dv,newdat.list)
+                 model=fit
       ))
     }
     if (kernel =="polynomial"){
       if (misclass > stoppage.threshold*nrow(x)) {
-        stop("Misclassified points above stoppage threshold; curvilinear hyperoverlap not attempted.")
-      }
+
+
+        print("Misclassified points above stoppage threshold; curvilinear hyperoverlap not attempted.")
+        return(methods::new("Hyperoverlap",
+                            entity1=entity1,
+                            entity2=entity2,
+                            dimensions=dimensions,
+                            occurrences = as.data.frame(occurrences),
+                            shape="linear",
+                            polynomial.order = 1,
+                            result = "overlap",
+                            accuracy = accuracy,
+                            number.of.points.misclassified = misclass,
+                            model=fit)
+        )
+      } else {
 
       #quadratic
       fit2 <-  e1071::svm(formula = y~.,data=occurrences, scale=FALSE, kernel ="polynomial",degree=2, cost=cost)
@@ -141,11 +148,6 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
 
       if (misclass == 0) {
 
-        #find the decision boundary coordinates
-        newdat.pred <-  stats::predict(fit, newdata=newdat, decision.values=T)
-        newdat.dv   <-  attr(newdat.pred, 'decision.values')
-        newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
-
         return(methods::new("Hyperoverlap",
                             entity1=entity1,
                             entity2=entity2,
@@ -156,7 +158,7 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                             result = "non-overlap",
                             accuracy = accuracy,
                             number.of.points.misclassified = 0,
-                            decisionboundary=list(newdat.dv,newdat.list)
+                            model=fit
         ))
         break()
       }
@@ -177,10 +179,6 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
 
         if (misclass == 0) {
 
-          #find the decision boundary coordinates
-          newdat.pred <-  stats::predict(fit, newdata=newdat, decision.values=T)
-          newdat.dv   <-  attr(newdat.pred, 'decision.values')
-          newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
 
           return(methods::new("Hyperoverlap",
                               entity1=entity1,
@@ -192,16 +190,12 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                               result = "non-overlap",
                               accuracy = accuracy,
                               number.of.points.misclassified = 0,
-                              decisionboundary=list(newdat.dv,newdat.list)
+                              model=fit
           ))
           break()
         }
       }
 
-            #find the decision boundary coordinates of model with lowest misclass
-            newdat.pred <-  stats::predict(fit, newdata=newdat, decision.values=T)
-            newdat.dv   <-  attr(newdat.pred, 'decision.values')
-            newdat.dv   <-  array(newdat.dv, dim=rep(50, n))
 
             return(methods::new("Hyperoverlap",
                        entity1=entity1,
@@ -213,10 +207,11 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                        result = "overlap",
                        accuracy=accuracy,
                        number.of.points.misclassified = misclass,
-                       decisionboundary=list(newdat.dv,newdat.list)
+                       model=fit
             ))
 
-          }
+      }
+    }
         }
       }
 

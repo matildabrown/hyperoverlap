@@ -4,9 +4,10 @@
 \alias{hyperoverlap_set}
 \title{Pairwise overlap detection in n-dimensional space of multiple entities using support vector machines (SVMs)}
 \usage{
-hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 50,
+hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 1000,
 stoppage.threshold = 0.2, write.to.file = FALSE,
-path = paste0("hyperoverlap_", Sys.time(), "/"))
+path = paste0("hyperoverlap_", Sys.time(), "/"),
+sample.dimensionality.omit = "FALSE")
 }
 \arguments{
 \item{x}{A matrix or data.frame containing the variables of interest for both entities.}
@@ -17,13 +18,15 @@ path = paste0("hyperoverlap_", Sys.time(), "/"))
 
 \item{kernel.degree}{Parameter needed for \code{kernel = polynomial} (default = 3).}
 
-\item{cost}{Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).}
+\item{cost}{Specifies the SVM margin 'hardness'. Default value is 1000, but can be increased for improved accuracy (although this increases runtimes and memory usage).}
 
 \item{stoppage.threshold}{Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).}
 
 \item{write.to.file}{Logical. If TRUE, each \code{\link{hyperoverlap-class}} object is saved as a .rds file.}
 
 \item{path}{Character. Path to write .rds files to (default: create subdirectory with \code{Sys.time()}).}
+
+\item{sample.dimensionality.omit}{Logical. If TRUE, omits any entity pairs with a combined sample size less than n+1, where n is the number of dimensions (see details).}
 }
 \value{
 A long-form matrix with the following columns:
@@ -38,6 +41,12 @@ If specified, individual \code{Hyperoverlap-class} objects are written to file.
 }
 \description{
 This function is a wrapper for \code{\link{hyperoverlap_detect}} for pairwise overlap detection between multiple entities.
+}
+\details{
+In n dimensions, any set of points up to n+1 points can be separated using a linear hyperplane. This may produce an artefactual non-overlap result.
+The \code{sample.dimensionality.omit} parameter gives two options for dealing with these pairs when they form part of a larger analysis.
+If \code{sample.dimensionality.omit = "TRUE"}, this pair is removed from the analysis (result = NA).
+If \code{sample.dimensionality.omit = "FALSE"}, the pair is included, but a warning is printed.
 }
 \examples{
 \dontrun{

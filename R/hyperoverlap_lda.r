@@ -28,9 +28,16 @@
 #' @export
 
 
-hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
-{
+hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE) {
   occ <- x@occurrences
+  n=length(x@dimensions)
+
+
+  #set up reference points for biplot
+  ref = matrix(nrow=n, ncol=n, data=0)
+  diag(ref)=1
+
+
   if (is.data.frame(occ)==FALSE) occ <- as.data.frame(occ)
   n <- ncol(occ) - 1
   colnames(occ)[1] = "Entity"
@@ -45,15 +52,16 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
     ord[,i] <- stats::runif(n, -1, 1)
   }
 
-  orth <- matlib::GramSchmidt(ord, normalize = TRUE)
+  orth <- matlib::GramSchmidt(ord, normalize = TRUE) #force orthogonality
 
-  while (length(which(orth==0))>0){
+  while (length(which(orth==0))>0){ #not allow duplicate axes, zero axes
     for (i in 2:n){
       ord[,i] <- stats::runif(n, -1, 1)
     }
     orth <- matlib::GramSchmidt(ord, normalize = TRUE)
   }
 
+  #set up transformation matrix
   tran <- occ
   cols <- c(colnames(occ)[1], "LDA1")
   for (i in 2:n) {
@@ -61,43 +69,93 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE)
   }
   tran[,2:ncol(tran)] <- NA
   colnames(tran) <- cols
-  for (i in 2:(n + 1)) {
-    m <- matrix(nrow = nrow(occ), ncol = n)
-    for (j in 1:n) {
-      m[, j] <- (occ[, i] * orth[j, (i - 1)])
-    }
-    tran[, (i)] <- rowSums(m)
-  }
-  if (visualise3d == FALSE) {
+
+  #transform data and ref matrix
+  tran[,2:ncol(tran)] <- as.matrix(occ[,-1])%*%orth
+  ref1 = ref%*%orth
+
+
+
+    if (visualise3d == FALSE) {
+
+  ########2d VISUALISATION######
     pca <- stats::princomp(tran[, 3:(n + 1)])
+
+    #transform ref matrix by pca
+    ref2=ref1[,-1]%*%pca$loadings
+    ref2 = cbind(ref1[,1],ref2)
+
+
+    #set up segments for variable importance plot
+    seg = matrix(nrow=n,ncol=4)
+    colnames(seg)=c("x1","y1","x2","y2")
+    midx = min(tran2[,2])+(max(tran2[,2]-min(tran2[,2]))/2)
+    midy = min(tran2[,3])+(max(tran2[,3]-min(tran2[,3]))/2)
+    seg[,1] = rep(midx,n)
+    seg[,2] = rep(midy,n)
+    for (i in 1:n){
+      seg[i,3]=midx+ref2[i,1]
+      seg[i,4]=midy+ref2[i,2]
+    }
+
     tran2 <- tran[1:3]
     colnames(tran2)[3] <- "residualPCA"
-    m <- matrix(nrow = nrow(occ), ncol = (n - 1))
-    for (j in 1:(n - 1)) {
-      m[, j] <- (occ[, (j + 2)] * pca$loadings[j, 1])
-    }
-    tran2[, 3] <- rowSums(m)
+
+    #add second axis to lda scores
+    tran2[, 3] <- pca$scores[,1]
+
     if (return.plot == TRUE) {
+    #plotting
+      par(mfrow=c(1,2)) #plot data, variable transformation side-by-side
       graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)], main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
+      graphics::plot(tran2[, 2:3], col = "grey")
+      segments(seg[,1],seg[,2],seg[,3],seg[,4])
+      text(seg[,3],seg[,4],colnames(occ)[2:n])
+      plotrix::draw.circle(seg[2,1],seg[1,2],1)
+      segments(rep(0,3),rep(0,3),ref2[,1],ref2[,2])
+      text(ref2[,1],ref2[,2],colnames(data[,1:4]))
+
     }
   }
     if (visualise3d == TRUE) {
+      #########3D visualisation########
       pca <- stats::princomp(tran[, 3:(n + 1)])
+      ref2=ref1[,-1]%*%pca$loadings
+      ref2 = cbind(ref1[,1],ref2)
+
       tran2 <- tran[1:4]
+
       colnames(tran2)[3:4] <- c("residualPCA1", "residualPCA2")
-      m <- matrix(nrow = nrow(occ), ncol = (n - 1))
-      for (j in 1:(n - 1)) {
-        m[, j] <- (occ[, (j + 2)] * pca$loadings[j,
-                                                 1])
+      tran2[, 3:4] <- pca$scores[,1:2]
+
+      #set up segments for variable importance plot
+      seg = matrix(nrow=n,ncol=6)
+      colnames(seg)=c("x1","y1","z1","x2","y2","z2")
+      midx = min(tran2[,2])+(max(tran2[,2]-min(tran2[,2]))/2)
+      midy = min(tran2[,3])+(max(tran2[,3]-min(tran2[,3]))/2)
+      midz = min(tran2[,4])+(max(tran2[,4]-min(tran2[,4]))/2)
+      seg[,1] = rep(midx,n)
+      seg[,2] = rep(midy,n)
+      seg[,3] <- rep(midz,n)
+
+      for (i in 1:n){
+        seg[i,4]=midx+ref2[i,1]
+        seg[i,5]=midy+ref2[i,2]
+        seg[i,6]=midz+ref2[i,3]
       }
-      tran2[, 3] <- rowSums(m)
-      for (j in 1:(n - 1)) {
-        m[, j] <- (occ[, (j + 2)] * pca$loadings[j,
-                                                 2])
-      }
-      tran2[, 4] <- rowSums(m)
-      if (return.plot == TRUE)
+
+      if (return.plot == TRUE){
+        #####plotting
+        rgl::mfrow3d(1, 1, sharedMouse = TRUE)
         rgl::plot3d(tran2[, 2:4], col = c("red", "blue")[as.factor(tran2$Entity)], alpha=0.3, size = 7, main = paste0("Hyperoverlap: ", x@entity1, " and ", x@entity2))
+        aspect3d(1)
+        rgl::plot3d(tran2[, 2:4], col = "grey", alpha=0.2,asp=1, size = 7)
+        aspect3d(1)
+        segments3d(x=as.vector(t(seg[,c(1,4)])),
+                   y=as.vector(t(seg[,c(2,5)])),
+                   z=as.vector(t(seg[,c(3,6)])))
+        text3d(x=seg[,4],y=seg[,5],z=seg[,6],colnames(data[,1:4]))
     }
+     }
   return(tran2)
 }

@@ -9,5 +9,6 @@
 #'
 #' @author Matilda Brown \email{matilda.brown@@utas.edu.au}
 #'
-#' @import ggplot2
+#' @import ggplot2 e1071
+#'
 NULL

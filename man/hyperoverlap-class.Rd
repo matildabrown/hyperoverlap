@@ -27,6 +27,6 @@ Storage class for the description of hyperoverlaps
 
 \item{\code{number.of.points.misclassified}}{a length-one numeric vector}
 
-\item{\code{decision.boundary}}{list of 2; used for plotting decision boundary}
+\item{\code{model}}{svm model used to plot decision boundary}
 }}
 

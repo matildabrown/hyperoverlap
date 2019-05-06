@@ -2,18 +2,20 @@
 #'
 #' This function is a wrapper for \code{\link{hyperoverlap_detect}} for pairwise overlap detection between multiple entities.
 #'
-#' @usage hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 50,
+#' @usage hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 1000,
 #' stoppage.threshold = 0.2, write.to.file = FALSE,
-#' path = paste0("hyperoverlap_", Sys.time(), "/"))
+#' path = paste0("hyperoverlap_", Sys.time(), "/"),
+#' sample.dimensionality.omit = "FALSE")
 #'
 #' @param x A matrix or data.frame containing the variables of interest for both entities.
 #' @param y A vector of labels.
 #' @param kernel Character. Either "linear" or "polynomial" (default = "polynomial").
 #' @param kernel.degree Parameter needed for \code{kernel = polynomial} (default = 3).
-#' @param cost Specifies the SVM margin 'hardness'. Default value is 50, but can be increased for improved accuracy (although this increases runtimes and memory usage).
+#' @param cost Specifies the SVM margin 'hardness'. Default value is 1000, but can be increased for improved accuracy (although this increases runtimes and memory usage).
 #' @param stoppage.threshold Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).
 #' @param write.to.file Logical. If TRUE, each \code{\link{hyperoverlap-class}} object is saved as a .rds file.
 #' @param path Character. Path to write .rds files to (default: create subdirectory with \code{Sys.time()}).
+#' @param sample.dimensionality.omit Logical. If TRUE, omits any entity pairs with a combined sample size less than n+1, where n is the number of dimensions (see details).
 #'
 #' @return A long-form matrix with the following columns:
 #' entity1,
@@ -25,6 +27,11 @@
 #'
 #'If specified, individual \code{Hyperoverlap-class} objects are written to file.
 #'
+#'@details In n dimensions, any set of points up to n+1 points can be separated using a linear hyperplane. This may produce an artefactual non-overlap result.
+#'The \code{sample.dimensionality.omit} parameter gives two options for dealing with these pairs when they form part of a larger analysis.
+#'If \code{sample.dimensionality.omit = "TRUE"}, this pair is removed from the analysis (result = NA).
+#'If \code{sample.dimensionality.omit = "FALSE"}, the pair is included, but a warning is printed.
+#'
 #' @examples
 #' \dontrun{
 #' data(iris)
@@ -33,7 +40,7 @@
 #' @export
 
 
-hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=50,stoppage.threshold=0.2, write.to.file=FALSE, path=paste0("hyperoverlap_",Sys.time(),"/")){
+hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=1000,stoppage.threshold=0.2, write.to.file=FALSE, path=paste0("hyperoverlap_",Sys.time(),"/"), sample.dimensionality.omit="FALSE"){
 
   #if data are incomplete, break
   if (length(which(is.na(x)==TRUE))>0){
@@ -98,8 +105,13 @@ hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=50,sto
 
       dat.j <-  dat[which(dat[,1]==entities[j]),]
       dat.ij  <-  rbind(dat.i,dat.j)
-
-      hyperoverlap.ij  <-  hyperoverlap_detect(dat.ij[,-1],dat.ij[,1],kernel=kernel,kernel.degree=kernel.degree, cost=cost,stoppage.threshold=stoppage.threshold)
+      if (nrow(dat.ij)<ncol(dat.ij)) {
+        if(sample.dimensionality.omit == "FALSE") {
+        rlang::warn(paste0("Dimensionality and low number of points mean that a boundary can always be found between ",entities[i], " and ",entities[j],"."))
+        }
+        if(sample.dimensionality.omit == "TRUE"){break(paste0("Dimensionality and low number of points mean that a boundary can always be found between ",entities[i], " and ",entities[j],". This pair has been excluded."))}
+      }
+      hyperoverlap.ij  <-  hyperoverlap_detect(dat.ij[,-1],dat.ij[,1],kernel=kernel,kernel.degree=kernel.degree, cost=cost,stoppage.threshold=stoppage.threshold, set=TRUE)
 
       results[[1]] <- c(results[[1]], hyperoverlap.ij@entity1)
       results[[2]] <- c(results[[2]], hyperoverlap.ij@entity2)
