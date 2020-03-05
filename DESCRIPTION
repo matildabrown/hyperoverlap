@@ -1,15 +1,17 @@
 Package: hyperoverlap
 Title: Overlap Detection in n-Dimensional Space
-Version: 0.1
+Version: 0.3
 Description: Uses support vector machines to identify a perfectly separating hyperplane (linear or curvilinear) between two entities in high-dimensional space. If this plane exists, the entities do not overlap. Applications include overlap detection in morphological, resource or environmental dimensions.
 Authors@R: c(person("Matilda", "Brown", email = "matilda.brown@utas.edu.au", role = c("aut", "cre")), person("Greg", "Jordan", role="aut"))
-Depends: R (>= 3.4.4)
-Imports: e1071, matlib, ggplot2, rgl, misc3d, methods, stats, MASS
+Depends: R (>= 3.4.0)
+Imports: e1071, matlib, ggplot2, rgl, misc3d, methods, stats, MASS, graphics
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown, 
+    plotrix, 
+    rlang
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

@@ -3,7 +3,6 @@
 \docType{package}
 \name{hyperoverlap}
 \alias{hyperoverlap}
-\alias{hyperoverlap-package}
 \title{Hyperoverlap: Detection and Visualisation of Overlap in n-Dimensional Space}
 \description{
 Uses support vector machines to identify a perfectly separating hyperplane (linear or curvilinear) between two entities in high-dimensional space. If this plane exists, the entities do not overlap. Applications include overlap detection in morphological, resource or environmental dimensions.

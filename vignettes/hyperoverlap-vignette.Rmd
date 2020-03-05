@@ -82,10 +82,12 @@ transformed_data <- hyperoverlap_lda(versicolor_virginica4d)
 
 In three dimensions: 
 ```{r, results='show',  fig.height=5,fig.width=7, webgl = hook_webgl,fig.align="center"}
+rgl.close()  #close previous device
 transformed_data <- hyperoverlap_lda(setosa_virginica4d, visualise3d=TRUE) 
 ```
 
 ```{r, results='show',  fig.height=5,fig.width=7, webgl = hook_webgl,fig.align="center"}
+rgl.close()  #close previous device
 transformed_data <- hyperoverlap_lda(versicolor_virginica4d, visualise3d=TRUE) #plots the best three dimensions for visualising overlap
 ```
 ## Examining patterns of overlap in groups of entities

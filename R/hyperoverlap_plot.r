@@ -21,7 +21,8 @@ hyperoverlap_plot = function(x){
   if (length(x@dimensions)>=4){
     stop("Plotting of decision boundary not supported in >3 dimensions. Use hyperoverlap_lda()")
   }
-
+  
+  n = length(x@dimensions)
 
   grid.length = 50
   newdat.list <-  lapply(x@occurrences[,-1], function(z) seq(min(z), max(z), len=grid.length))

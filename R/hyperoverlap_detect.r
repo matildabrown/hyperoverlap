@@ -160,7 +160,7 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                             number.of.points.misclassified = 0,
                             model=fit
         ))
-        break()
+
       }
 
       #increase kernel function if misclass>0
@@ -192,7 +192,7 @@ hyperoverlap_detect <- function(x, y, kernel="polynomial",kernel.degree=3, cost=
                               number.of.points.misclassified = 0,
                               model=fit
           ))
-          break()
+
         }
       }
 

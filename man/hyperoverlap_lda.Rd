@@ -4,7 +4,7 @@
 \alias{hyperoverlap_lda}
 \title{Hyperoverlap visualisation using linear discriminant analysis (LDA)}
 \usage{
-hyperoverlap_lda(x, return.plot=TRUE, visualise3d=FALSE)
+hyperoverlap_lda(x, return.plot=TRUE, visualise3d=FALSE, showlegend=TRUE)
 }
 \arguments{
 \item{x}{An \code{\link{hyperoverlap-class}} object.}
@@ -12,6 +12,8 @@ hyperoverlap_lda(x, return.plot=TRUE, visualise3d=FALSE)
 \item{return.plot}{Logical. If TRUE, data are plotted using \code{plot()}.}
 
 \item{visualise3d}{Logical. If FALSE, data are projected onto two axes (LDA1, residualPCA1). If TRUE, data are projected onto three axes (LDA1, residualPCA1, residualPCA2)}
+
+\item{showlegend}{Logical. Used for 3D plots.}
 }
 \value{
 Returns a dataframe with columns "Entity", "LDA1", "residualPCA1",
