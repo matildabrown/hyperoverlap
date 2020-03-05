@@ -89,6 +89,13 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE) {
     #set up segments for variable importance plot
     seg = matrix(nrow=n,ncol=4)
     colnames(seg)=c("x1","y1","x2","y2")
+      
+       tran2 <- tran[1:3]
+    colnames(tran2)[3] <- "residualPCA"
+
+    #add second axis to lda scores
+    tran2[, 3] <- pca$scores[,1]
+      
     midx = min(tran2[,2])+(max(tran2[,2]-min(tran2[,2]))/2)
     midy = min(tran2[,3])+(max(tran2[,3]-min(tran2[,3]))/2)
     seg[,1] = rep(midx,n)
@@ -98,11 +105,7 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE) {
       seg[i,4]=midy+ref2[i,2]
     }
 
-    tran2 <- tran[1:3]
-    colnames(tran2)[3] <- "residualPCA"
-
-    #add second axis to lda scores
-    tran2[, 3] <- pca$scores[,1]
+   
 
     if (return.plot == TRUE) {
     #plotting
