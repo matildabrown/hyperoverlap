@@ -3,11 +3,8 @@
 #' @param x An \code{\link{hyperoverlap-class}} object.
 #' @param return.plot Logical. If TRUE, data are plotted using \code{plot()}.
 #' @param visualise3d Logical. If FALSE, data are projected onto two axes (LDA1, residualPCA1). If TRUE, data are projected onto three axes (LDA1, residualPCA1, residualPCA2)
-<<<<<<< HEAD
 #' @param showlegend Logical. Used for 3D plots.
-=======
-#' @param showlegend Logical. Used for 3D plots. 
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
+#' @param showlegend Logical. Used for 3D plots.
 #'
 #' @usage hyperoverlap_lda(x, return.plot=TRUE, visualise3d=FALSE, showlegend=TRUE)
 #'
@@ -17,12 +14,11 @@
 #'
 #'
 #' @examples
-#' \dontrun{
 #' #using iris dataset reduced to two species
 #' data = iris[which(iris$Species!=("versicolor")),]
 #' x = hyperoverlap_detect(data[1:4], data$Species)
 #' hyperoverlap_lda(x)
-#'}
+#'
 #' @details This function provides a way to visualise overlap (or non-overlap)
 #' between classes of high dimensional data. For inspection, it is useful to
 #' use the base graphics package (implemented by return.plot=TRUE). The
@@ -33,21 +29,20 @@
 #' @export
 
 
-<<<<<<< HEAD
-hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showlegend = TRUE)
-=======
-hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showlegend = TRUE) 
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
-{
+
+hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showlegend = TRUE) {
   occ <- x@occurrences
   n <- length(x@dimensions)
   ref <- matrix(nrow = n, ncol = n, data = 0)
   diag(ref) <- 1
-<<<<<<< HEAD
+
+  oldpar <- graphics::par(no.readonly = TRUE)
+  on.exit(graphics::par(oldpar))
+
   if (is.data.frame(occ) == FALSE)
-=======
-  if (is.data.frame(occ) == FALSE) 
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
+
+  if (is.data.frame(occ) == FALSE)
+
     occ <- as.data.frame(occ)
   n <- ncol(occ) - 1
   colnames(occ)[1] <- "Entity"
@@ -86,7 +81,7 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
     tran2 <- tran[1:3]
     colnames(tran2)[3] <- "residualPCA"
     tran2[, 3] <- pca$scores[, 1]
-<<<<<<< HEAD
+
     midx <- min(tran2[, 2]) + (max(tran2[, 2] - min(tran2[,
                                                          2]))/2)
     rangex <- max(tran2[, 2]) - min(tran2[, 2])
@@ -99,26 +94,24 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
 
     plot_factor <- min(c(rangex, rangey))*0.7
 
-=======
-    midx <- min(tran2[, 2]) + (max(tran2[, 2] - min(tran2[, 
+    midx <- min(tran2[, 2]) + (max(tran2[, 2] - min(tran2[,
                                                          2]))/2)
     rangex <- max(tran2[, 2]) - min(tran2[, 2])
-    midy <- min(tran2[, 3]) + (max(tran2[, 3] - min(tran2[, 
+    midy <- min(tran2[, 3]) + (max(tran2[, 3] - min(tran2[,
                                                          3]))/2)
     rangey <- max(tran2[, 3]) - min(tran2[, 3])
-                 
+
     seg[, 1] <- rep(max(tran2[, 2]), n)
     seg[, 2] <- rep(midy+rangey, n)
-    
+
     plot_factor <- min(c(rangex, rangey))*0.7
-      
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
+
+
     for (i in 1:n) {
       seg[i, 3] <- max(tran2[, 2]) + plot_factor*ref2[i, 1]
       seg[i, 4] <- midy+rangey + plot_factor*ref2[i, 2]
     }
     if (return.plot == TRUE) {
-<<<<<<< HEAD
       graphics::par(mfrow = c(1, 2))
       graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)])
 
@@ -142,33 +135,6 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
 
       graphics::mtext(paste0("Hyperoverlap: ", x@entity1, " and ",
                    x@entity2), side = 3, line = -2, outer = TRUE, cex=1, font=2)
-
-=======
-      par(mfrow = c(1, 2))
-      graphics::plot(tran2[, 2:3], col = c("red", "blue")[as.factor(tran2$Entity)]) 
-          
-      graphics::plot(tran2[, 2:3], col = "grey", 
-                     xlim = c(min(tran2$LDA1), min(tran2$LDA1)+2*rangex),
-                     ylim = c(min(tran2$residualPCA), min(tran2$residualPCA)+2*rangey))
-      
-      #plot the 'circle' 
-      asp <- (par("pin")[1]/diff(par("usr")[1:2]))/(par("pin")[2]/diff(par("usr")[3:4]))
-      plotrix::draw.ellipse(seg[2, 1], seg[1, 2], plot_factor/2,plot_factor/2, border="gray", lwd=1.5)
-      
-      segments(seg[, 1], seg[, 2], seg[, 3], seg[, 4], lwd=2, col="gray40")
-      points(seg[, 3], seg[, 4], col='white', cex=2.7, pch=20)
-      text(seg[, 3], seg[, 4], 1:n, cex=1.2)
-      
-    
-      
-      
-      legend("bottomright", legend=colnames(occ)[2:(n+1)],
-            pch = paste(seq(1:n)), cex=0.8)
-      
-      mtext(paste0("Hyperoverlap: ", x@entity1, " and ", 
-                   x@entity2), side = 3, line = -3, outer = TRUE, cex=1.5, font=2)
-      
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
     }
   }
   if (visualise3d == TRUE) {
@@ -180,19 +146,12 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
     tran2[, 3:4] <- pca$scores[, 1:2]
     seg <- matrix(nrow = n, ncol = 6)
     colnames(seg) <- c("x1", "y1", "z1", "x2", "y2", "z2")
-<<<<<<< HEAD
+
     midx <- min(tran2[, 2]) + (max(tran2[, 2] - min(tran2[,
                                                          2]))/2)
     midy <- min(tran2[, 3]) + (max(tran2[, 3] - min(tran2[,
                                                          3]))/2)
     midz <- min(tran2[, 4]) + (max(tran2[, 4] - min(tran2[,
-=======
-    midx <- min(tran2[, 2]) + (max(tran2[, 2] - min(tran2[, 
-                                                         2]))/2)
-    midy <- min(tran2[, 3]) + (max(tran2[, 3] - min(tran2[, 
-                                                         3]))/2)
-    midz <- min(tran2[, 4]) + (max(tran2[, 4] - min(tran2[, 
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
                                                          4]))/2)
     seg[, 1] <- rep(midx, n)
     seg[, 2] <- rep(midy, n)
@@ -203,7 +162,7 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
       seg[i, 6] <- midz + ref2[i, 3]
     }
     if (return.plot == TRUE) {
-<<<<<<< HEAD
+
       rgl::par3d(windowRect = c(20, 30, 1200, 600))
       rgl::mfrow3d(1, 2, sharedMouse = TRUE)
       rgl::plot3d(tran2[, 2:4], col = c("red", "blue")[as.factor(tran2$Entity)],
@@ -220,24 +179,6 @@ hyperoverlap_lda <- function (x, return.plot = TRUE, visualise3d = FALSE, showle
 
       if(showlegend==TRUE){
         rgl::legend3d("left", legend=colnames(occ)[2:(n+1)],
-=======
-      par3d(windowRect = c(20, 30, 1200, 600))
-      rgl::mfrow3d(1, 2, sharedMouse = TRUE)
-      rgl::plot3d(tran2[, 2:4], col = c("red", "blue")[as.factor(tran2$Entity)], 
-                  alpha = 0.3, size = 7,)
-      aspect3d(1)
-      rgl::plot3d(tran2[, 2:4], col = "grey", alpha = 0.4, 
-                  asp = 1, size = 7, xlab=NULL, ylab=NULL, zlab=NULL)
-      aspect3d(1)
-      segments3d(x = as.vector(t(seg[, c(1, 4)])), y = as.vector(t(seg[, 
-                        c(2, 5)])), z = as.vector(t(seg[, c(3, 6)])), lwd=2, col="gray40")
-     
-      text3d(x = seg[, 4], y = seg[, 5], z = seg[, 6], 
-             1:n, font=2, cex=1.5)
-      
-      if(showlegend==TRUE){
-        legend3d("left", legend=colnames(occ)[2:(n+1)],
->>>>>>> 1db06e92085b25e4a1dc7323e414169f6ba3eabc
              pch = paste(seq(1:n)), cex=1)
       }
     }

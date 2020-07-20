@@ -6,9 +6,10 @@
 #' @seealso \code{\link{hyperoverlap_detect}} , \code{\link{hyperoverlap_lda}}
 #'
 #' @examples
-#' \dontrun{
+#' data = iris[which(iris$Species!=("versicolor")),]
+#' x = hyperoverlap_detect(data[,1:3],data$Species, kernel="linear")
 #' hyperoverlap_plot(x)
-#' }
+#'
 #' @export
 
 
@@ -21,7 +22,7 @@ hyperoverlap_plot = function(x){
   if (length(x@dimensions)>=4){
     stop("Plotting of decision boundary not supported in >3 dimensions. Use hyperoverlap_lda()")
   }
-  
+
   n = length(x@dimensions)
 
   grid.length = 50

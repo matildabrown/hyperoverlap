@@ -9,9 +9,9 @@
 #' @return A \code{ggplot} object
 #'
 #' @examples
-#' \dontrun{
-#' hyperoverlap_pairs_plot(hyperoverlap.set.iris)
-#' }
+#' hyperoverlap.iris.set = hyperoverlap_set(iris[1:3],iris$Species, kernel="linear")
+#' hyperoverlap_pairs_plot(hyperoverlap.iris.set)
+#'
 #' @export
 
 hyperoverlap_pairs_plot <-  function(x, cols = pal){

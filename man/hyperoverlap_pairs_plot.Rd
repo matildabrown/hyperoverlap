@@ -21,7 +21,7 @@ This function plots a matrix of overlap.
 Input matrix must contain columns named "entity1", "entity2" and "result"
 }
 \examples{
-\dontrun{
-hyperoverlap_pairs_plot(hyperoverlap.set.iris)
-}
+hyperoverlap.iris.set = hyperoverlap_set(iris[1:3],iris$Species, kernel="linear")
+hyperoverlap_pairs_plot(hyperoverlap.iris.set)
+
 }

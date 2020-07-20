@@ -13,9 +13,10 @@ hyperoverlap_plot(x)
 Plot the optimal separating hyperplane found by hyperoverlap_detect() in 3D .
 }
 \examples{
-\dontrun{
+data = iris[which(iris$Species!=("versicolor")),]
+x = hyperoverlap_detect(data[,1:3],data$Species, kernel="linear")
 hyperoverlap_plot(x)
-}
+
 }
 \seealso{
 \code{\link{hyperoverlap_detect}} , \code{\link{hyperoverlap_lda}}

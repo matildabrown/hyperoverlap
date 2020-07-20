@@ -6,7 +6,7 @@
 \usage{
 hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 1000,
 stoppage.threshold = 0.2, write.to.file = FALSE,
-path = paste0("hyperoverlap_", Sys.time(), "/"),
+path = NULL,
 sample.dimensionality.omit = "FALSE")
 }
 \arguments{
@@ -24,7 +24,7 @@ sample.dimensionality.omit = "FALSE")
 
 \item{write.to.file}{Logical. If TRUE, each \code{\link{hyperoverlap-class}} object is saved as a .rds file.}
 
-\item{path}{Character. Path to write .rds files to (default: create subdirectory with \code{Sys.time()}).}
+\item{path}{Character. Path to write .rds files to. Ignored if \code{write.to.file=FALSE}}
 
 \item{sample.dimensionality.omit}{Logical. If TRUE, omits any entity pairs with a combined sample size less than n+1, where n is the number of dimensions (see details).}
 }
@@ -49,8 +49,8 @@ If \code{sample.dimensionality.omit = "TRUE"}, this pair is removed from the ana
 If \code{sample.dimensionality.omit = "FALSE"}, the pair is included, but a warning is printed.
 }
 \examples{
-\dontrun{
+
 data(iris)
 hyperoverlap.iris.set = hyperoverlap_set(iris[1:3],iris$Species, kernel="linear")
-}
+
 }

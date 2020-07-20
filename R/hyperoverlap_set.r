@@ -4,7 +4,7 @@
 #'
 #' @usage hyperoverlap_set(x, y, kernel = "polynomial",kernel.degree = 3, cost = 1000,
 #' stoppage.threshold = 0.2, write.to.file = FALSE,
-#' path = paste0("hyperoverlap_", Sys.time(), "/"),
+#' path = NULL,
 #' sample.dimensionality.omit = "FALSE")
 #'
 #' @param x A matrix or data.frame containing the variables of interest for both entities.
@@ -14,7 +14,7 @@
 #' @param cost Specifies the SVM margin 'hardness'. Default value is 1000, but can be increased for improved accuracy (although this increases runtimes and memory usage).
 #' @param stoppage.threshold Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).
 #' @param write.to.file Logical. If TRUE, each \code{\link{hyperoverlap-class}} object is saved as a .rds file.
-#' @param path Character. Path to write .rds files to (default: create subdirectory with \code{Sys.time()}).
+#' @param path Character. Path to write .rds files to. Ignored if \code{write.to.file=FALSE}
 #' @param sample.dimensionality.omit Logical. If TRUE, omits any entity pairs with a combined sample size less than n+1, where n is the number of dimensions (see details).
 #'
 #' @return A long-form matrix with the following columns:
@@ -33,14 +33,14 @@
 #'If \code{sample.dimensionality.omit = "FALSE"}, the pair is included, but a warning is printed.
 #'
 #' @examples
-#' \dontrun{
+#'
 #' data(iris)
 #' hyperoverlap.iris.set = hyperoverlap_set(iris[1:3],iris$Species, kernel="linear")
-#' }
+#'
 #' @export
 
 
-hyperoverlap_set = function(x,y,kernel="polynomial",kernel.degree=3, cost=1000,stoppage.threshold=0.2, write.to.file=FALSE, path=paste0("hyperoverlap_",Sys.time(),"/"), sample.dimensionality.omit="FALSE"){
+hyperoverlap_set <-  function(x,y,kernel="polynomial",kernel.degree=3, cost=1000,stoppage.threshold=0.2, write.to.file=FALSE, path=NULL, sample.dimensionality.omit="FALSE"){
 
   #if data are incomplete, break
   if (length(which(is.na(x)==TRUE))>0){

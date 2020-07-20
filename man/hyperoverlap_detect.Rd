@@ -5,7 +5,7 @@
 \title{Overlap detection in n-dimensional space using support vector machines (SVMs)}
 \usage{
 hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
-       stoppage.threshold = 0.4, set = FALSE)
+       stoppage.threshold = 0.4, verbose = TRUE, set = FALSE)
 }
 \arguments{
 \item{x}{A matrix or data.frame containing the variables of interest for both entities.}
@@ -20,6 +20,8 @@ hyperoverlap_detect(x, y, kernel = "polynomial", kernel.degree = 3, cost = 500,
 
 \item{stoppage.threshold}{Numeric. If the number of points misclassified using a linear hyperplane exceeds this proportion of the number of observations, non-linear separation is not attempted. Must be between 0 and 1 (default = 0.2).}
 
+\item{verbose}{Logical. If TRUE, prints diagnostic messages.}
+
 \item{set}{Logical. Is this function being called as part of \code{hyperoverlap_set()}? Should not need to be changed.}
 }
 \value{
@@ -32,8 +34,8 @@ Given a matrix containing the ecological data (x) and labels (y) for two entitie
 Input data should be preprocessed so that all variables are comparable (e.g. same order of magnitude). Polynomial kernels allow curvilinear decision boundaries to be found between entities (see \url{https://www.cs.cmu.edu/~ggordon/SVMs/new-svms-and-kernels.pdf}). Smaller values of \code{kernel.degree} permit less complex decision boundaries; biological significance is likely to be lost at values > 5.
 }
 \examples{
-\dontrun{
+
 data = iris[which(iris$Species!=("versicolor")),]
 x = hyperoverlap_detect(data[,1:3],data$Species, kernel="linear")
-}
+
 }

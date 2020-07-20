@@ -30,12 +30,11 @@ transformed coordinates of each point are also returned as a dataframe,
 which can be plotted with user-defined parameters.
 }
 \examples{
-\dontrun{
 #using iris dataset reduced to two species
 data = iris[which(iris$Species!=("versicolor")),]
 x = hyperoverlap_detect(data[1:4], data$Species)
 hyperoverlap_lda(x)
-}
+
 }
 \seealso{
 \code{\link{hyperoverlap_detect}}
