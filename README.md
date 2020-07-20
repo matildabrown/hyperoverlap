@@ -1,6 +1,6 @@
 ## hyperoverlap
 
-### Installataion
+### Installation
 ```
 install.packages("devtools");
 require(devtools);
