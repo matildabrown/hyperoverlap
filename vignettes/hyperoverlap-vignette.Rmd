@@ -17,6 +17,13 @@ knitr::opts_chunk$set(
 library(knitr)
 library(rgl)
 knit_hooks$set(webgl = hook_webgl)
+
+if (!requireNamespace("rmarkdown", quietly = TRUE) ||
+!rmarkdown::pandoc_available("1.14")) {
+warning(call. = FALSE, "These vignettes assume rmarkdown and pandoc
+version 1.14. These were not found. Older versions will not work.")
+knitr::knit_exit()
+}
 ```
 
 Hyperoverlap can be used to detect and visualise overlap in n-dimensional space. 
