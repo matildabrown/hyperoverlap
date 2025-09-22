@@ -16,6 +16,9 @@
 
 hyperoverlap_pairs_plot <-  function(x, cols = pal){
 
+  #global variable binding
+  result <- NULL
+
   entity1 <- entity2 <- NULL
   pal = c("red","blue","lightgrey")
   overlap.plot = ggplot2::ggplot(data = x, aes(entity1, entity2, fill = as.factor(result)))+

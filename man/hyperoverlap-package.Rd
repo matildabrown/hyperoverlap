@@ -13,7 +13,7 @@ Uses support vector machines to identify a perfectly separating hyperplane (line
 More details available in Brown et al. (2020) <doi:10.1111/2041-210X.13363> and vignette.
 }
 \author{
-\strong{Maintainer}: Matilda Brown \email{matilda.brown@utas.edu.au} (\href{https://orcid.org/0000-0003-2536-8365}{ORCID})
+\strong{Maintainer}: Matilda Brown \email{m.brown2@kew.org} (\href{https://orcid.org/0000-0003-2536-8365}{ORCID})
 
 Authors:
 \itemize{
