@@ -4,7 +4,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_tile theme_void scale_fill_manual scale_x_discrete theme element_text coord_fixed
 ## usethis namespace: end
 NULL
 
